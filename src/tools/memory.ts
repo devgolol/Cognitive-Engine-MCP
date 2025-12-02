@@ -39,7 +39,20 @@ export function remember(input: RememberInput): { id: number; message: string } 
 // 기억 검색
 export function recall(input: RecallInput): { memories: Array<{ id: number; content: string; tags: string[]; date: string }> } {
   const limit = input.limit || 5;
-  const query = input.query.toLowerCase();
+  const query = input.query.toLowerCase().trim();
+
+  // * 또는 빈 쿼리면 전체 조회
+  if (query === '*' || query === '') {
+    const results = memoryQueries.getRecent.all(limit) as Memory[];
+    return {
+      memories: results.map(m => ({
+        id: m.id,
+        content: m.content,
+        tags: JSON.parse(m.tags),
+        date: m.created_at
+      }))
+    };
+  }
 
   // 태그로 검색
   let results = memoryQueries.searchByTag.all(`%${query}%`, limit) as Memory[];
