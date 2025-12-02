@@ -57,7 +57,11 @@ export const memoryQueries = {
 
   getById: db.prepare('SELECT * FROM memories WHERE id = ?'),
 
-  delete: db.prepare('DELETE FROM memories WHERE id = ?')
+  delete: db.prepare('DELETE FROM memories WHERE id = ?'),
+
+  deleteByTag: db.prepare('DELETE FROM memories WHERE tags LIKE ?'),
+
+  deleteAll: db.prepare('DELETE FROM memories')
 };
 
 // Lesson 관련 쿼리
@@ -88,7 +92,13 @@ export const lessonQueries = {
     GROUP BY pattern
     ORDER BY count DESC
     LIMIT ?
-  `)
+  `),
+
+  delete: db.prepare('DELETE FROM lessons WHERE id = ?'),
+
+  deleteByCategory: db.prepare('DELETE FROM lessons WHERE category LIKE ?'),
+
+  deleteAll: db.prepare('DELETE FROM lessons')
 };
 
 export type Memory = {

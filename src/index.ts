@@ -7,10 +7,10 @@ import {
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 
-import { remember, recall, getRecentMemories } from './tools/memory.js';
+import { remember, recall, getRecentMemories, forget, clearMemories } from './tools/memory.js';
 import { think } from './tools/think.js';
 import { verify } from './tools/verify.js';
-import { learn, getInsights } from './tools/learn.js';
+import { learn, getInsights, forgetLesson, clearLessons } from './tools/learn.js';
 
 const server = new Server(
   {
@@ -148,6 +148,56 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           },
           required: ['category']
         }
+      },
+      {
+        name: 'forget',
+        description: '특정 기억을 삭제합니다. ID 또는 태그로 삭제할 수 있습니다.',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'number',
+              description: '삭제할 기억의 ID'
+            },
+            tag: {
+              type: 'string',
+              description: '삭제할 기억의 태그 (해당 태그 포함된 모든 기억 삭제)'
+            }
+          }
+        }
+      },
+      {
+        name: 'clear_memories',
+        description: '모든 기억을 삭제합니다. 주의: 되돌릴 수 없습니다.',
+        inputSchema: {
+          type: 'object',
+          properties: {}
+        }
+      },
+      {
+        name: 'forget_lesson',
+        description: '특정 학습 패턴을 삭제합니다. ID 또는 카테고리로 삭제할 수 있습니다.',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'number',
+              description: '삭제할 학습의 ID'
+            },
+            category: {
+              type: 'string',
+              description: '삭제할 카테고리 (해당 카테고리의 모든 학습 삭제)'
+            }
+          }
+        }
+      },
+      {
+        name: 'clear_lessons',
+        description: '모든 학습 패턴을 삭제합니다. 주의: 되돌릴 수 없습니다.',
+        inputSchema: {
+          type: 'object',
+          properties: {}
+        }
       }
     ]
   };
@@ -183,6 +233,22 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case 'get_insights':
         result = getInsights(args as { category: string; limit?: number });
+        break;
+
+      case 'forget':
+        result = forget(args as { id?: number; tag?: string });
+        break;
+
+      case 'clear_memories':
+        result = clearMemories();
+        break;
+
+      case 'forget_lesson':
+        result = forgetLesson(args as { id?: number; category?: string });
+        break;
+
+      case 'clear_lessons':
+        result = clearLessons();
         break;
 
       default:

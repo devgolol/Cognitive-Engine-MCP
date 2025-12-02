@@ -66,3 +66,35 @@ export function getLessons(category: string, limit: number = 10): { lessons: Arr
     }))
   };
 }
+
+export interface ForgetLessonInput {
+  id?: number;
+  category?: string;
+}
+
+// 특정 학습 패턴 삭제
+export function forgetLesson(input: ForgetLessonInput): { deleted: number; message: string } {
+  let deleted = 0;
+
+  if (input.id) {
+    const result = lessonQueries.delete.run(input.id);
+    deleted = result.changes;
+  } else if (input.category) {
+    const result = lessonQueries.deleteByCategory.run(`%${input.category}%`);
+    deleted = result.changes;
+  }
+
+  return {
+    deleted,
+    message: deleted > 0 ? `Deleted ${deleted} lesson(s)` : 'No matching lessons found'
+  };
+}
+
+// 전체 학습 패턴 삭제
+export function clearLessons(): { deleted: number; message: string } {
+  const result = lessonQueries.deleteAll.run();
+  return {
+    deleted: result.changes,
+    message: `Cleared all lessons (${result.changes} deleted)`
+  };
+}

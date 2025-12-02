@@ -1,61 +1,44 @@
-# CLAUDE.md
+# Cognitive Engine MCP
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+지능 향상 MCP 서버
 
-## Cognitive Engine MCP
-
-지능 향상 MCP 서버 - 낮은 컨텍스트로 높은 성능
-
-### 빌드/실행
+## 빌드
 ```bash
-npm run build    # TypeScript 빌드
-npm start        # 서버 실행
+npm run build && npm start
 ```
 
-### 구조
+## 구조
 ```
 src/
-├── index.ts           # MCP 서버 진입점
-├── db/sqlite.ts       # SQLite DB + 쿼리
-└── tools/
-    ├── memory.ts      # remember(저장), recall(검색)
-    ├── think.ts       # 단계별 추론
-    ├── verify.ts      # 답변 검증
-    └── learn.ts       # 패턴 학습
+├── index.ts        # MCP 진입점
+├── db/sqlite.ts    # SQLite 쿼리
+└── tools/          # memory, think, verify, learn
 ```
 
-### Tools
+## Tools
 | Tool | 역할 |
 |------|------|
-| `remember` | 정보 압축 저장 (태그 포함) |
-| `recall` | 태그/키워드 기반 검색 |
-| `think` | 문제 분해 → 추론 → 결론 (depth 1-5) |
-| `verify` | 논리 일관성/관련성/품질 검증 |
-| `learn` | 성공/실패 패턴 기록 |
-| `get_insights` | 학습된 패턴 조회 |
+| `remember` | 기억 저장 (태그) |
+| `recall` | 기억 검색 |
+| `forget` | 기억 삭제 (id/tag) |
+| `clear_memories` | 전체 기억 삭제 |
+| `think` | 단계별 추론 (depth 1-5) |
+| `verify` | 답변 검증 |
+| `learn` | 패턴 학습 |
+| `get_insights` | 패턴 조회 |
+| `forget_lesson` | 학습 삭제 (id/category) |
+| `clear_lessons` | 전체 학습 삭제 |
 
-### DB 테이블
-- `memories`: id, content, tags(JSON), created_at
+## DB
+- `memories`: id, content, tags, created_at
 - `lessons`: id, category, pattern, outcome, created_at
 
-### 설치
-
+## 설치
 ```bash
-# 전역 설치
 npm install -g .
-
-# 또는 npm link
-npm link
 ```
 
-### Claude Code 연동
-
+## 연동
 ```json
-{
-  "mcpServers": {
-    "cognitive-engine": {
-      "command": "cognitive-engine"
-    }
-  }
-}
+{"mcpServers":{"cognitive-engine":{"command":"cognitive-engine"}}}
 ```

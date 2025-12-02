@@ -76,3 +76,35 @@ export function getRecentMemories(limit: number = 10): { memories: Array<{ id: n
     }))
   };
 }
+
+export interface ForgetInput {
+  id?: number;
+  tag?: string;
+}
+
+// 특정 기억 삭제
+export function forget(input: ForgetInput): { deleted: number; message: string } {
+  let deleted = 0;
+
+  if (input.id) {
+    const result = memoryQueries.delete.run(input.id);
+    deleted = result.changes;
+  } else if (input.tag) {
+    const result = memoryQueries.deleteByTag.run(`%${input.tag}%`);
+    deleted = result.changes;
+  }
+
+  return {
+    deleted,
+    message: deleted > 0 ? `Deleted ${deleted} memory(s)` : 'No matching memories found'
+  };
+}
+
+// 전체 기억 삭제
+export function clearMemories(): { deleted: number; message: string } {
+  const result = memoryQueries.deleteAll.run();
+  return {
+    deleted: result.changes,
+    message: `Cleared all memories (${result.changes} deleted)`
+  };
+}
