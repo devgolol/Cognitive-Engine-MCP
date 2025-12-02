@@ -5,6 +5,8 @@
 ## 설치
 
 ```bash
+git clone https://github.com/devgolol/Cognitive-Engine-MCP.git
+cd Cognitive-Engine-MCP
 npm install
 npm run build
 ```
@@ -12,7 +14,11 @@ npm run build
 ## Claude Code 전역 설치
 
 ```bash
-claude mcp add cognitive-engine -s user -- node D:/2-K/dist/index.js
+# 현재 디렉토리에서 실행
+claude mcp add cognitive-engine -s user -- node $(pwd)/dist/index.js
+
+# 또는 직접 경로 지정
+claude mcp add cognitive-engine -s user -- node /your/path/to/Cognitive-Engine-MCP/dist/index.js
 ```
 
 ## Tools
