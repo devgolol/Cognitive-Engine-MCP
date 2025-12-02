@@ -11,6 +11,7 @@ import { remember, recall, getRecentMemories, forget, clearMemories } from './to
 import { think } from './tools/think.js';
 import { verify } from './tools/verify.js';
 import { learn, getInsights, forgetLesson, clearLessons } from './tools/learn.js';
+import { dbUtils } from './db/sqlite.js';
 
 const server = new Server(
   {
@@ -198,6 +199,14 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           type: 'object',
           properties: {}
         }
+      },
+      {
+        name: 'vacuum_db',
+        description: 'DB를 압축하여 용량을 최적화합니다. 삭제된 데이터 공간을 회수합니다.',
+        inputSchema: {
+          type: 'object',
+          properties: {}
+        }
       }
     ]
   };
@@ -249,6 +258,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case 'clear_lessons':
         result = clearLessons();
+        break;
+
+      case 'vacuum_db':
+        const sizeBefore = dbUtils.getSize();
+        dbUtils.vacuum();
+        const sizeAfter = dbUtils.getSize();
+        result = {
+          before: `${(sizeBefore / 1024).toFixed(1)}KB`,
+          after: `${(sizeAfter / 1024).toFixed(1)}KB`,
+          saved: `${((sizeBefore - sizeAfter) / 1024).toFixed(1)}KB`
+        };
         break;
 
       default:

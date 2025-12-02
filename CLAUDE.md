@@ -28,6 +28,7 @@ src/
 | `get_insights` | 패턴 조회 |
 | `forget_lesson` | 학습 삭제 (id/category) |
 | `clear_lessons` | 전체 학습 삭제 |
+| `vacuum_db` | DB 압축 (용량 최적화) |
 
 ## DB
 - `memories`: id, content, tags, created_at

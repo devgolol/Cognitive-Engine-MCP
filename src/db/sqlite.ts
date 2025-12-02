@@ -101,6 +101,15 @@ export const lessonQueries = {
   deleteAll: db.prepare('DELETE FROM lessons')
 };
 
+// DB 유틸리티
+export const dbUtils = {
+  vacuum: () => db.exec('VACUUM'),
+  getSize: () => {
+    const stats = db.prepare('SELECT page_count * page_size as size FROM pragma_page_count(), pragma_page_size()').get() as { size: number };
+    return stats.size;
+  }
+};
+
 export type Memory = {
   id: number;
   content: string;
