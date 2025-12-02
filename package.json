@@ -4,6 +4,9 @@
   "description": "MCP server for enhanced AI cognition - memory, reasoning, verification, and learning",
   "type": "module",
   "main": "dist/index.js",
+  "bin": {
+    "cognitive-engine": "./dist/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",

@@ -38,13 +38,23 @@ src/
 - `memories`: id, content, tags(JSON), created_at
 - `lessons`: id, category, pattern, outcome, created_at
 
+### 설치
+
+```bash
+# 전역 설치
+npm install -g .
+
+# 또는 npm link
+npm link
+```
+
 ### Claude Code 연동
+
 ```json
 {
   "mcpServers": {
     "cognitive-engine": {
-      "command": "node",
-      "args": ["D:\\2-K\\dist\\index.js"]
+      "command": "cognitive-engine"
     }
   }
 }
